@@ -86,6 +86,7 @@ export function updateQuantity(productId, newQuantity) {
       matchingItem = cartItem;
     }
   });
+  
 
   matchingItem.deliveryOptionId = deliveryOptionId;
   saveToStorage();
