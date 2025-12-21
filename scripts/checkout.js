@@ -12,9 +12,7 @@ import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import { deliveryOptions } from '../data/deliveryOptions.js';
 
 
-
-
-
+function renderOrderSummary(){
 let cartSummaryHTML = '';
 
 cart.forEach((cartItem)=>{
@@ -40,6 +38,7 @@ cart.forEach((cartItem)=>{
   const today = dayjs();
   const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
   const dateString = deliveryDate.format('dddd, MMMM D');
+
 
   cartSummaryHTML +=  
   
@@ -209,6 +208,9 @@ document.querySelectorAll('.js-delivery-option')
   //const productId = element.dataset.productId;
   //const deliveryOptionId = element.dataset.deliveryoptionId
   const {productId, deliveryOptionId}= element.dataset;
-updateDeliveryOption(productId, deliveryOptionId)
+updateDeliveryOption(productId, deliveryOptionId);
+renderOrderSummary();
  });
   });
+}
+renderOrderSummary();
