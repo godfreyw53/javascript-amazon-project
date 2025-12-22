@@ -61,6 +61,7 @@ export function calculateCartQuantity() {
   });
  return cartQuantity;
 }
+ 
 
 export function updateQuantity(productId, newQuantity) {
   let matchingItem;
@@ -72,7 +73,7 @@ export function updateQuantity(productId, newQuantity) {
   });
 
   matchingItem.quantity = newQuantity;
-
+//matchingItem.deliveryOptionId = deliveryOptionId;
   saveToStorage();
   
 }
@@ -87,7 +88,7 @@ export function updateQuantity(productId, newQuantity) {
     }
   });
   
-
+// matchingItem.quantity = newQuantity;
   matchingItem.deliveryOptionId = deliveryOptionId;
   saveToStorage();
 }

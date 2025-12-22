@@ -2,14 +2,21 @@ import{
   cart, 
   removeFromCart,
   calculateCartQuantity,
-  updateQuantity,
-  updateDeliveryOption
+   updateDeliveryOption,
+  updateQuantity
+ 
 } from '../../data/cart.js';
 import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
-import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
+import { 
+  deliveryOptions, 
+  getDeliveryOption,
+calculateDeliveryDate
+ } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
+import { renderCheckoutHeader } from './checkoutHeader.js';
+
 
 
 
@@ -28,9 +35,10 @@ cart.forEach((cartItem)=>{
 
   const deliveryOption =getDeliveryOption(deliveryOptionId)
 
-  const today = dayjs();
-  const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
-  const dateString = deliveryDate.format('dddd, MMMM D');
+  //const today = dayjs();
+  //const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
+  //const dateString = deliveryDate.format('dddd, MMMM D');
+  const dateString = calculateDeliveryDate(deliveryOption);
 
 
   cartSummaryHTML +=  
@@ -88,9 +96,10 @@ function deliveryOptionsHTML(matchingProduct, cartItem){
 
   let html = '';
 deliveryOptions.forEach((deliveryOption)=>{
-  const today = dayjs();
-  const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
-  const dateString = deliveryDate.format('dddd, MMMM D');
+ // const today = dayjs();
+ // const deliveryDate = today.add(deliveryOption.deliveryDays,'days');
+ // const dateString = deliveryDate.format('dddd, MMMM D');
+ const dateString = calculateDeliveryDate(deliveryOption);
 
   const priceString= deliveryOption.priceCents ===0
 
@@ -130,13 +139,15 @@ document.querySelector('.js-order-summary')
        const productId = link.dataset.productId;
        removeFromCart(productId);
 
-      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      /*const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove();
-
-      renderPaymentSummary();
+      */
+      renderCheckoutHeader();
       renderOrderSummary();
+      renderPaymentSummary();
      
-      updateCartQuantity();
+     
+      //updateCartQuantity();
       });
     });
 
@@ -153,27 +164,29 @@ document.querySelector('.js-return-to-home-link')
 
 updateCartQuantity();
 
-document.querySelectorAll('.js-update-link')
-  .forEach((link)=>{
-    link.addEventListener(('click'), ()=>{
-     const productId = link.dataset.productId;
-   //  console.log(productId);
 
-   const container = document.querySelector(`.js-cart-item-container-${productId}`);
-   container.classList.add('is-editing-quantity')
+  document.querySelectorAll('.js-update-link')
+    .forEach((link) => {
+      link.addEventListener('click', () => {
+        const productId = link.dataset.productId;
+
+        const container = document.querySelector(
+          `.js-cart-item-container-${productId}`
+        );
+        container.classList.add('is-editing-quantity');
+      });
     });
-  });
 
   document.querySelectorAll('.js-save-link')
   .forEach((link) => {
     link.addEventListener('click', () => {
       const productId = link.dataset.productId;
 
-      /*const container = document.querySelector(
-     '   `.js-cart-item-container-${productId}`
-      );
-      container.classList.remove('is-editing-quantity');
-      */
+      const container = document.querySelector(
+          `.js-cart-item-container-${productId}`
+        );
+        container.classList.remove('is-editing-quantity');
+      
       const quantityInput = document.querySelector(
         `.js-quantity-input-${productId}`
       );
@@ -183,6 +196,16 @@ document.querySelectorAll('.js-update-link')
         return;
       }
       updateQuantity(productId, newQuantity);
+
+       renderCheckoutHeader();
+        renderOrderSummary();
+        renderPaymentSummary();
+
+         // We can delete the code below (from the original solution)
+        // because instead of using the DOM to update the page directly
+        // we can use MVC and re-render everything. This will make sure
+        // the page always matches the data.
+        /*
 
       const container = document.querySelector(
         `.js-cart-item-container-${productId}`
@@ -195,8 +218,11 @@ document.querySelectorAll('.js-update-link')
       quantityLabel.innerHTML = newQuantity;
 
       updateCartQuantity();
+      renderPaymentSummary();
+      */
     });
   });
+  
 
 document.querySelectorAll('.js-delivery-option')
   .forEach((element)=>{
