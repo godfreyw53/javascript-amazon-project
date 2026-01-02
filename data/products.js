@@ -51,7 +51,21 @@ this.sizeChartLink = productDetails.sizeChartLink;
   `
  }
 }
+/*
+ const date = new Date();
+ console.log(date);
 
+ date.toLocaleTimeString();
+ console.log(date.toLocaleDateString());
+
+
+ console.log(this);
+
+ const object2 = {
+  a: 2,
+  b: this.a
+ }
+ */ 
  export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
