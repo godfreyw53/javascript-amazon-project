@@ -1,9 +1,9 @@
 import {renderOrderSummary} from '../../scripts/checkout/orderSummary';
 import {loadFromStorage } from '../../data/cart.js';
-import { loadProducts } from '../../data/products.js';
+import { loadProducts, loadProductsFetch } from '../../data/products.js';
 
 beforeAll((done)=>{
-  loadProducts(()=>{
+  loadProductsFetch().then(()=>{
     done();
   });
 });
